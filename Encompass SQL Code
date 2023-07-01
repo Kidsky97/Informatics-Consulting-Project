@@ -1,0 +1,203 @@
+Use InSyncProject
+ 
+--How its rated and used.
+Select * from [EHR Results CSV1] 
+ 
+Delete from [EHR Results CSV1] 
+where Dept is null 
+ 
+--Avg Rating
+   Select Dept, Avg(Rating) as "Avg Rating"
+from [EHR Results CSV1] 
+Group by Dept 
+ 
+--Number of Participants 
+   Select Dept, Count(ID) as Participants 
+from [EHR Results CSV1]
+Group by Dept
+ 
+--Usage numbers by department
+   Select Dept, Sum(Billing) as Billing, Sum(Charting) as Charting, Sum(Patient_Record_Search) as "Patient Record Search", Sum(Scheduling)as Scheduling, Sum(Sending_Receiving_Records_Info) as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients) as Communication, Sum(Reporting) as Reporting
+from [EHR Results CSV1]
+Group by Dept
+ 
+--Percentages for How InSync is Used
+   Select Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Reporting) *100/43 as Reporting
+from [EHR Results CSV1]
+ 
+--Percentages of use by Department Members
+   Select Dept, Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Reporting) *100/43 as Reporting
+from [EHR Results CSV1]
+Group By Dept
+ 
+--Input on Needed Improvements by Dept
+Select * from [EHR Results CSV2]
+ 
+Select Dept, Sum(Billing) as Billing, Sum(Charting) as Charting, Sum(Patient_Record_Search) as "Patient Record Search", Sum(Scheduling)as Scheduling, Sum(Sending_Receiving_Records_Info) as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients) as Communication, Sum(Data_Reporting) as Reporting, SUM(Other) as Other, SUM(Unable_to_answer) as "Unable to Answer"
+from [EHR RESULTS CSV2]
+Group by Dept
+ 
+--Percentage of Desired Improvement Per Category
+Select Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Data_Reporting)*100/43 as Reporting, SUM(Other)*100/43 as Other, SUM(Unable_to_answer)*100/43 as "Unable to Answer"
+from [EHR RESULTS CSV2]
+ 
+ 
+--Reliability of InSync
+   Select * from [EHR Results CSV3] 
+ 
+   Select COUNT(_95)*100/43 as Reliable from [EHR Results CSV3]
+where _95 = 'True'
+   select COUNT(_95)*100/43 as Unreliable from [EHR Results CSV3]
+where _95 = 'False'
+   select COUNT(_95)*100/43 as 'Unable to answer' from [EHR Results CSV3]
+where _95 = 'Unable to answer'
+ 
+   select SUM(TRUE)*100/43 as 'Reliable', SUM(FALSE)*100/43 as 'Unreliable', SUM(Unable_to_Answer)*100/43 as 'Unable to Answer' from [EHR Results CSV3]
+ 
+ 
+ 
+Select * from [EHR Results CSV4] 
+ 
+ 
+--Level of User Friendliness
+Select * from [EHR Results 5]
+ 
+--What do they believe about user friendliness? 
+Select Dept, Sum(Yes) as Yes, Sum(No)as No from [EHR Results 5]
+Group by Dept
+ 
+Select Sum(Yes)*100/16 as Yes, Sum(No)*100/16 as No from [EHR Results 5]
+ 
+ 
+ 
+--What are the constraints? 
+Select 
+Sum(Platform_Constraints_can_only_be_accessed_on_a_certain_device_Ex_Computer_Phone_etc)*100/16 as Platform_Constraints, 
+Sum(Lacks_accessibility_features_text_to_speech_visual_aids_etc)*100/16 as Accessibility,
+Sum(Lacks_customizability_ability_to_change_views_options_for_ease_of_use)*100/16 as Customization, 
+Sum(Hard_confusing_to_navigate)*100/16 as Navigation, 
+Sum(Lacks_customer_support_resources)*100/16 as Customer_Support 
+from [EHR Results 5]
+ 
+Select Dept,
+Sum(Platform_Constraints_can_only_be_accessed_on_a_certain_device_Ex_Computer_Phone_etc)*100/16 as Platform_Constraints, 
+Sum(Lacks_accessibility_features_text_to_speech_visual_aids_etc)*100/16 as Accessibility,
+Sum(Lacks_customizability_ability_to_change_views_options_for_ease_of_use)*100/16 as Customization, 
+Sum(Hard_confusing_to_navigate)*100/16 as Navigation, 
+Sum(Lacks_customer_support_resources)*100/16 as Customer_Support 
+from [EHR Results 5]
+Group by Dept
+ 
+ 
+--Create Views 
+--1. Avg Rating
+Create View Rating as 
+Select Dept, Avg(Rating) as "Avg Rating"
+from [EHR Results CSV1] 
+Group by Dept
+ 
+--2. Amount of Participants
+Create View Participation as 
+Select Dept, Count(ID) as Participants 
+from [EHR Results CSV1]
+Group by Dept
+ 
+--3. Usage Amount Overall
+Create View Usage_By_Dept_Percentage as 
+ 
+Select Dept, Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Reporting)*100/43 as Reporting
+from [EHR Results CSV1]
+Group by Dept
+ 
+Create View Usage_Overall_Percentage as
+ 
+Select Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Reporting)*100/43 as Reporting
+from [EHR Results CSV1]
+ 
+ 
+--4. How Insync is Used (%)
+Create View How_Insync_Is_Used as 
+Select Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Reporting) *100/43 as Reporting
+from [EHR Results CSV1]
+ 
+--5. Percentage of Use by Dept. 
+Create View Dept_Usage_Percentage as 
+Select Dept, Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Reporting) *100/43 as Reporting
+from [EHR Results CSV1]
+Group By Dept
+ 
+--6. Needed Improvement (Individual Numbers)
+Create View Improvement_Numbers as 
+Select Dept, Sum(Billing) as Billing, Sum(Charting) as Charting, Sum(Patient_Record_Search) as "Patient Record Search", Sum(Scheduling)as Scheduling, Sum(Sending_Receiving_Records_Info) as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients) as Communication, Sum(Data_Reporting) as Reporting, SUM(Other) as Other, SUM(Unable_to_answer) as "Unable to Answer"
+from [EHR RESULTS CSV2]
+Group by Dept
+ 
+--7. Needed Improvements by Dept 
+Create View Needed_Improvements_By_Dept2 as 
+Select Dept, Sum(Billing)*100/43 as Billing, Sum(Charting)*100/43 as Charting, Sum(Patient_Record_Search)*100/43 as "Patient Record Search", Sum(Scheduling)*100/43 as Scheduling, Sum(Sending_Receiving_Records_Info)*100/43 as "Sending and Receiving Records",
+Sum(Communication_Staff_Patients)*100/43 as Communication, Sum(Data_Reporting)*100/43 as Reporting, SUM(Other)*100/43 as Other, SUM(Unable_to_answer)*100/43 as "Unable to Answer"
+from [EHR RESULTS CSV2]
+Group by Dept
+ 
+--8. Overall Reliability 
+Create View Overall_Reliability_Percentage as
+select SUM(TRUE)*100/43 as 'Reliable', SUM(FALSE)*100/43 as 'Unreliable', SUM(Unable_to_Answer)*100/43 as 'Unable to Answer' from [EHR Results CSV3]
+ 
+--9. T or F User Friendly
+Create View User_Friendliness_Percentage as 
+Select Sum(Yes)*100/16 as Yes, Sum(No)*100/16 as No from [EHR Results 5]
+ 
+ 
+--10. User Friendly Constraints 
+Create View User_Friendly_Constraints_Overall as
+Select 
+Sum(Platform_Constraints_can_only_be_accessed_on_a_certain_device_Ex_Computer_Phone_etc)*100/16 as Platform_Constraints, 
+Sum(Lacks_accessibility_features_text_to_speech_visual_aids_etc)*100/16 as Accessibility,
+Sum(Lacks_customizability_ability_to_change_views_options_for_ease_of_use)*100/16 as Customization, 
+Sum(Hard_confusing_to_navigate)*100/16 as Navigation, 
+Sum(Lacks_customer_support_resources)*100/16 as Customer_Support 
+from [EHR Results 5]
+ 
+Create View User_Friendly_Constraints_By_Dept as
+Select Dept,
+Sum(Platform_Constraints_can_only_be_accessed_on_a_certain_device_Ex_Computer_Phone_etc)*100/16 as Platform_Constraints, 
+Sum(Lacks_accessibility_features_text_to_speech_visual_aids_etc)*100/16 as Accessibility,
+Sum(Lacks_customizability_ability_to_change_views_options_for_ease_of_use)*100/16 as Customization, 
+Sum(Hard_confusing_to_navigate)*100/16 as Navigation, 
+Sum(Lacks_customer_support_resources)*100/16 as Customer_Support 
+from [EHR Results 5]
+Group by Dept
+
+
+--I was given 2 separate sheets. One with the User's Level and One without.
+--One was a sheet with all of the personnel that received the survey and the other represents who Completed it.
+--I wanted to see if there was a correlation between the user level and overall rating. 
+--No correlation was found and some of the names required data cleaning,
+--for some of the names on the recall list didn't match the ones on the survey.
+--Since the Names don't match, their level won't as well. 
+ 
+Use InSyncProject
+ 
+select * from [make-employee-changes-table_20230424_84054 (2)]
+ 
+select * from FinalSurveyResults2
+ 
+select F.Name,F.Dept, M.Level, F.Rating from FinalSurveyResults2 as F
+Left join [make-employee-changes-table_20230424_84054 (2)] as M
+on F.Name = M.Name
+where F.Name is not null and M.Level is not Null
+ 
+select F.Name,F.Dept, M.Level, F.Rating from FinalSurveyResults2 as F
+Full join [make-employee-changes-table_20230424_84054 (2)] as M
+on F.Name = M.Name
+where M.Name is null
